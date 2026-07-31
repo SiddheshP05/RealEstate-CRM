@@ -1,0 +1,44 @@
+services:
+  - type: web
+    name: saivandan-api
+    runtime: docker
+    plan: starter
+    dockerfilePath: ./backend/Dockerfile
+    dockerContext: ./backend
+    healthCheckPath: /api/health
+    envVars:
+      - key: SPRING_DATASOURCE_URL
+        fromDatabase:
+          name: saivandan-db
+          property: connectionString
+      - key: SPRING_DATASOURCE_USERNAME
+        fromDatabase:
+          name: saivandan-db
+          property: user
+      - key: SPRING_DATASOURCE_PASSWORD
+        fromDatabase:
+          name: saivandan-db
+          property: password
+      - key: JWT_SECRET
+        generateValue: true
+      - key: SPRING_JPA_HIBERNATE_DDL_AUTO
+        value: update
+
+  - type: web
+    name: saivandan-web
+    runtime: docker
+    plan: starter
+    dockerfilePath: ./frontend/Dockerfile
+    dockerContext: ./frontend
+    envVars:
+      - key: VITE_API_URL
+        fromService:
+          type: web
+          name: saivandan-api
+          envVarKey: RENDER_EXTERNAL_URL
+
+databases:
+  - name: saivandan-db
+    plan: starter
+    databaseName: sai_vandan_crm
+    user: crm
