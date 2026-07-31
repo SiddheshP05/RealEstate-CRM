@@ -1,0 +1,23 @@
+spring:
+  datasource:
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5432/sai_vandan_crm}
+    username: ${SPRING_DATASOURCE_USERNAME:crm}
+    password: ${SPRING_DATASOURCE_PASSWORD:crm}
+  jpa:
+    hibernate:
+      ddl-auto: update
+    open-in-view: false
+    properties:
+      hibernate:
+        format_sql: true
+server:
+  port: 8080
+  servlet:
+    context-path: /
+app:
+  security:
+    jwt-secret: ${JWT_SECRET:change-this-development-secret-key-to-a-long-value}
+    expiration-ms: ${JWT_EXPIRATION_MS:86400000}
+springdoc:
+  api-docs:
+    enabled: true
