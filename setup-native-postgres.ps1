@@ -30,7 +30,11 @@ if (Test-NetConnection localhost -Port 5432 -InformationLevel Quiet) {
     & $psql -h localhost -p 5432 -U postgres -d postgres -c "ALTER ROLE $dbUser WITH LOGIN PASSWORD '$dbPassword';" | Out-Null
   }
   $env:PGPASSWORD = $adminPassword
-  & $createdb -h localhost -p 5432 -U postgres -O $dbUser $dbName 2>$null
+  $dbResult = & $psql -h localhost -p 5432 -U postgres -d postgres -tAc "SELECT 1 FROM pg_database WHERE datname = '$dbName'" 2>$null
+  if ((($dbResult -join '')).Trim() -ne '1') {
+    & $createdb -h localhost -p 5432 -U postgres -O $dbUser $dbName | Out-Null
+    if ($LASTEXITCODE -ne 0) { throw "Database '$dbName' could not be created." }
+  }
   Write-Host "Using existing native PostgreSQL server on localhost:5432" -ForegroundColor Green
   Write-Host "Database: $dbName | User: $dbUser" -ForegroundColor Green
   exit 0
