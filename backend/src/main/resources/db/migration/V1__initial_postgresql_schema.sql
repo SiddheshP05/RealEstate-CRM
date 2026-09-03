@@ -1,0 +1,10 @@
+CREATE TABLE IF NOT EXISTS app_users (id BIGSERIAL PRIMARY KEY, username VARCHAR(255) NOT NULL UNIQUE, password_hash VARCHAR(255) NOT NULL, display_name VARCHAR(255) NOT NULL, role VARCHAR(100) NOT NULL, active BOOLEAN NOT NULL DEFAULT TRUE);
+CREATE TABLE IF NOT EXISTS roles (id BIGSERIAL PRIMARY KEY, role_name VARCHAR(100) NOT NULL UNIQUE);
+CREATE TABLE IF NOT EXISTS user_roles (user_id BIGINT NOT NULL REFERENCES app_users(id) ON DELETE CASCADE, role_id BIGINT NOT NULL REFERENCES roles(id) ON DELETE CASCADE, PRIMARY KEY (user_id, role_id));
+CREATE TABLE IF NOT EXISTS leads (id BIGSERIAL PRIMARY KEY, customer_name VARCHAR(255) NOT NULL, mobile VARCHAR(255) NOT NULL, email VARCHAR(255), city VARCHAR(255), budget INTEGER, interested_property VARCHAR(255), configuration VARCHAR(255), lead_source VARCHAR(255), sales_executive VARCHAR(255), status VARCHAR(255), enquiry_date TIMESTAMP);
+CREATE TABLE IF NOT EXISTS property_units (id BIGSERIAL PRIMARY KEY, unit_number VARCHAR(255) NOT NULL UNIQUE, project_name VARCHAR(255), wing VARCHAR(255), floor INTEGER, configuration VARCHAR(255), carpet_area INTEGER, built_up_area INTEGER, price INTEGER, parking BOOLEAN NOT NULL DEFAULT FALSE, amenities VARCHAR(255), status VARCHAR(255));
+CREATE TABLE IF NOT EXISTS bookings (id BIGSERIAL PRIMARY KEY, lead_id BIGINT NOT NULL REFERENCES leads(id), unit_id BIGINT NOT NULL REFERENCES property_units(id), booking_amount INTEGER, booking_date DATE, status VARCHAR(255));
+CREATE TABLE IF NOT EXISTS follow_ups (id BIGSERIAL PRIMARY KEY, lead_id BIGINT NOT NULL REFERENCES leads(id), type VARCHAR(255), scheduled_at TIMESTAMP, remarks VARCHAR(255), executive VARCHAR(255), completed BOOLEAN NOT NULL DEFAULT FALSE);
+CREATE TABLE IF NOT EXISTS operational_records (id BIGSERIAL PRIMARY KEY, module VARCHAR(255) NOT NULL, reference VARCHAR(255) NOT NULL, subject VARCHAR(255) NOT NULL, detail VARCHAR(255), amount VARCHAR(255), status VARCHAR(255), record_date DATE, owner VARCHAR(255));
+CREATE INDEX IF NOT EXISTS idx_leads_status ON leads(status);
+CREATE INDEX IF NOT EXISTS idx_operational_records_module ON operational_records(module);

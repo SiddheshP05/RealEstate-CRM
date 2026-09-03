@@ -6,3 +6,9 @@ dist/
 .idea/
 *.iml
 .env
+backend/data/
+postgres-data/
+postgres-native.log
+postgresql-native.zip
+postgresql-native/
+postgresql/

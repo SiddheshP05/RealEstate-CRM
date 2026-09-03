@@ -2,9 +2,9 @@ services:
   db:
     image: postgres:16-alpine
     environment:
-      POSTGRES_DB: sai_vandan_crm
-      POSTGRES_USER: crm
-      POSTGRES_PASSWORD: crm
+      POSTGRES_DB: ${POSTGRES_DB:-sai_vandan_crm}
+      POSTGRES_USER: ${POSTGRES_USER:-crm}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-crm}
     ports:
       - "5432:5432"
     volumes:
@@ -13,9 +13,10 @@ services:
   backend:
     build: ./backend
     environment:
-      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/sai_vandan_crm
-      SPRING_DATASOURCE_USERNAME: crm
-      SPRING_DATASOURCE_PASSWORD: crm
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/${POSTGRES_DB:-sai_vandan_crm}
+      SPRING_DATASOURCE_USERNAME: ${POSTGRES_USER:-crm}
+      SPRING_DATASOURCE_PASSWORD: ${POSTGRES_PASSWORD:-crm}
+      JWT_SECRET: ${JWT_SECRET:-change-this-development-secret-key-to-a-long-value}
     ports:
       - "8080:8080"
     depends_on:
@@ -24,7 +25,7 @@ services:
   frontend:
     build: ./frontend
     ports:
-      - "5173:5173"
+      - "5173:80"
     depends_on:
       - backend
 
