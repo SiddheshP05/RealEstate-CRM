@@ -56,6 +56,10 @@ public class SeedData {
           new OperationalRecord("Projects", "PROJECT-001", "Sai Vandan Complex", "Residential flats · 76% progress", "", "On schedule", "Suresh Pawar"),
           new OperationalRecord("Site Visits", "VIS-2026-031", "Aarav Shah", "Unit A-202 · Today 10:30 AM", "", "Confirmed", "Suresh Pawar"),
           new OperationalRecord("Finance", "KPI-FIN-07", "Collections", "Current period", "₹38.4L", "92% of target", "Snehal Kulkarni")));
+      if (jdbc.queryForObject("SELECT COUNT(*) FROM operational_records WHERE module = 'Attendance'", Long.class) == 0)
+        records.saveAll(List.of(
+          new OperationalRecord("Attendance", "ATT-DEMO-001", "Priya Deshmukh", "09:42 AM", "", "Present", "HR"),
+          new OperationalRecord("Attendance", "ATT-DEMO-002", "Rahul Patil", "09:51 AM", "", "Present", "HR")));
     };
   }
 }
